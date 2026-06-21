@@ -117,8 +117,8 @@ wss.on("connection", (ws) => {
   });
 });
 
-const PORT = 5502;
+const PORT = process.env.PORT || 5502;
+
 server.listen(PORT, () => {
-  console.log(`✅ Server running at http://127.0.0.1:${PORT}`);
-  console.log(`✅ Open http://127.0.0.1:${PORT}/lobby.html to start`);
+  console.log(`✅ Server running on port ${PORT}`);
 });
