@@ -6,7 +6,9 @@ function initChat() {
   const name = sessionStorage.getItem("display_name");
   if (!room || !name) return;
 
-  const wsUrl = `ws://${window.location.host}`;
+  // Use secure WebSocket when page is served over HTTPS
+  const wsProtocol = window.location.protocol === "https:" ? "wss:" : "ws:";
+  const wsUrl = wsProtocol + "//" + window.location.host;
   chatSocket = new WebSocket(wsUrl);
 
   chatSocket.onopen = () => {
@@ -14,6 +16,10 @@ function initChat() {
     chatSocket.send(JSON.stringify({ type: "join", room, name, uid }));
     chatReady = true;
     console.log("✅ Chat connected");
+  };
+
+  chatSocket.onerror = (err) => {
+    console.error("❌ Chat WebSocket error:", err);
   };
 
   chatSocket.onmessage = (event) => {
